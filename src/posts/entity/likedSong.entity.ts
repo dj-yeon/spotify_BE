@@ -1,8 +1,8 @@
 import { Entity, Column, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Song } from './song.entity';
 import { UsersModel } from 'src/users/entity/users.entity';
+import { SongPostModel } from './songPost.entity';
 
-@Entity('liked_songs')
+@Entity()
 export class LikedSong {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -13,6 +13,6 @@ export class LikedSong {
   @ManyToOne(() => UsersModel, (user) => user.likedSongs)
   user: UsersModel;
 
-  @ManyToOne(() => Song, (song) => song.likedByUsers)
-  song: Song;
+  @ManyToOne(() => SongPostModel, (song) => song.likedByUsers)
+  song: SongPostModel;
 }

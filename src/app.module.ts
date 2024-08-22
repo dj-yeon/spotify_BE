@@ -27,12 +27,12 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { PUBLIC_FOLDER_PATH } from './common/const/path.const';
 import { ImageModel } from './common/entity/image.entity';
 import { LogMiddleware } from './common/middleware/log.middleware';
-import { MusicModel } from './common/entity/music.entity';
 import { LikedSong } from './posts/entity/likedSong.entity';
 import { Price } from './posts/entity/price.entity';
 import { Product } from './posts/entity/product.entity';
 import { Subscription } from './users/entity/subscription.entity';
-import { Song } from './posts/entity/song.entity';
+import { SongModel } from './common/entity/song.entity';
+import { SongPostModel } from './posts/entity/songPost.entity';
 
 @Module({
   imports: [
@@ -56,12 +56,12 @@ import { Song } from './posts/entity/song.entity';
         PostsModel,
         UsersModel,
         ImageModel,
-        MusicModel,
+        SongModel,
         LikedSong,
         Price,
         Product,
         Subscription,
-        Song,
+        SongPostModel,
       ],
       synchronize: true,
     }),

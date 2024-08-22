@@ -18,28 +18,44 @@ export class TransactionInterceptor implements NestInterceptor {
   ): Promise<Observable<any>> {
     const req = context.switchToHttp().getRequest();
 
-    // 트렌젝션과 관련된 모든 쿼리를 담당할, 쿼리 러너를 생성한다.
+    // 트랜잭션과 관련된 모든 쿼리를 담당할 쿼리 러너를 생성한다.
     const qr = this.dataSource.createQueryRunner();
 
     // 쿼리 러너에 연결한다.
     await qr.connect();
 
-    // 쿼리 러너에서 트랜젝션을 시작한다.
-    // 이 시점부터 같은 쿼리 러너를 사용하면, 트랜젝션 안에서 데이터베이스 액션을 실행 할 수 있다.
+    // 쿼리 러너에서 트랜잭션을 시작한다.
     await qr.startTransaction();
 
     req.queryRunner = qr;
 
     return next.handle().pipe(
       catchError(async (e) => {
+        console.error('TransactionInterceptor - Error occurred:', e.message);
+        console.error('TransactionInterceptor - Stack trace:', e.stack);
+
         await qr.rollbackTransaction();
         await qr.release();
 
         throw new InternalServerErrorException(e.message);
       }),
       tap(async () => {
-        await qr.commitTransaction();
-        await qr.release();
+        try {
+          await qr.commitTransaction();
+        } catch (commitError) {
+          console.error(
+            'TransactionInterceptor - Commit error:',
+            commitError.message,
+          );
+          console.error(
+            'TransactionInterceptor - Stack trace:',
+            commitError.stack,
+          );
+          await qr.rollbackTransaction();
+          throw new InternalServerErrorException('Transaction commit failed');
+        } finally {
+          await qr.release();
+        }
       }),
     );
   }

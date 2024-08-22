@@ -16,6 +16,8 @@ async function bootstrap() {
     }),
   );
 
+  app.useLogger(['log', 'error', 'warn', 'debug', 'verbose']);
+
   // CORS 설정
   app.enableCors({
     origin: 'http://localhost:3000', // React/Next.js 애플리케이션의 주소

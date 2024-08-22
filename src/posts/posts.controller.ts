@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
   Param,
   ParseIntPipe,
   Patch,
@@ -24,8 +25,9 @@ import { PostsImagesService } from './image/images.service';
 import { LogInterceptor } from 'src/common/interceptor/log.interceptor';
 import { TransactionInterceptor } from 'src/common/interceptor/transaction.interceptor';
 import { QueryRunner } from 'src/common/decorator/query-runner.decorator';
-import { PostsMusicsService } from './music/musics.service';
-import { MusicModelType } from 'src/common/entity/music.entity';
+import { PostsSongsService } from './song/songs.service';
+import { SongModelType } from 'src/common/entity/song.entity';
+import { CreateSongPostDto } from './dto/create-song-post.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -33,7 +35,7 @@ export class PostsController {
     private readonly postsService: PostsService,
     private readonly dataSource: DataSource,
     private readonly postImageService: PostsImagesService,
-    private readonly postMusicService: PostsMusicsService,
+    private readonly postSongService: PostsSongsService,
   ) {}
 
   @Get()
@@ -42,48 +44,91 @@ export class PostsController {
     return this.postsService.paginatePosts(query);
   }
 
-  // ':': pathParameter
-  @Get(':id')
-  @UseInterceptors(LogInterceptor)
-  // @UseFilters(HttpExceptionFilter)
-  getPost(@Param('id', ParseIntPipe) id: number) {
-    //    throw new BadRequestException('test error');
+  // // ':': pathParameter
+  // @Get(':id')
+  // @UseInterceptors(LogInterceptor)
+  // // @UseFilters(HttpExceptionFilter)
+  // getPost(@Param('id', ParseIntPipe) id: number) {
+  //   //    throw new BadRequestException('test error');
 
-    return this.postsService.getPostById(id);
-  }
+  //   return this.postsService.getPostById(id);
+  // }
 
-  // POST METHOD
-  @Post()
+  // // POST METHOD
+  // @Post()
+  // @UseGuards(AccessTokenGuard)
+  // @UseInterceptors(TransactionInterceptor)
+  // async postPosts(
+  //   @User() user: UsersModel,
+  //   @Body() body: CreatePostDto,
+  //   @QueryRunner() qr: QR,
+  // ) {
+  //   const post = await this.postsService.createPost(user.id, body, qr);
+
+  //   await this.postImageService.createPostImage(
+  //     {
+  //       post,
+  //       path: body.image,
+  //       type: ImageModelType.POST_IMAGE,
+  //     },
+  //     qr,
+  //   );
+
+  //   await this.postSongService.createPostSong(
+  //     {
+  //       post,
+  //       path: body.image,
+  //       type: SongModelType.POST_SONG,
+  //     },
+  //     qr,
+  //   );
+
+  //   return this.postsService.getPostById(post.id, qr);
+  // }
+
+  @Post('song')
   @UseGuards(AccessTokenGuard)
   @UseInterceptors(TransactionInterceptor)
-  async postPosts(
+  async songPosts(
     @User() user: UsersModel,
-    @Body() body: CreatePostDto,
+    @Body() body: CreateSongPostDto,
     @QueryRunner() qr: QR,
   ) {
-    const post = await this.postsService.createPost(user.id, body, qr);
+    try {
+      console.log('user', user);
+      console.log('body', body);
 
-    await this.postImageService.createPostImage(
-      {
-        post,
-        path: body.image,
-        type: ImageModelType.POST_IMAGE,
-      },
-      qr,
-    );
+      const songPost = await this.postsService.createSongPost(
+        user.email,
+        body,
+        qr,
+      );
 
-    await this.postMusicService.createPostMusic(
-      {
-        post,
-        path: body.image,
-        type: MusicModelType.POST_MUSIC,
-      },
-      qr,
-    );
+      await this.postImageService.createPostImage(
+        {
+          songPost,
+          path: body.image,
+          type: ImageModelType.POST_IMAGE,
+        },
+        qr,
+      );
 
-    console.log('user', user);
+      await this.postSongService.createPostSong(
+        {
+          songPost,
+          path: body.song,
+          type: SongModelType.POST_SONG,
+        },
+        qr,
+      );
 
-    return this.postsService.getPostById(post.id, qr);
+      return songPost;
+    } catch (error) {
+      console.error('Error in songPosts:', error);
+      throw new InternalServerErrorException(
+        'An error occurred while creating the song post',
+      );
+    }
   }
 
   // PATCH METHOD

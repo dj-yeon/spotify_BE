@@ -8,7 +8,7 @@ import {
 import { Product } from './product.entity';
 import { Subscription } from 'src/users/entity/subscription.entity';
 
-@Entity('prices')
+@Entity()
 export class Price {
   @PrimaryGeneratedColumn('uuid')
   id: string;

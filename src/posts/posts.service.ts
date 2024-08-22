@@ -8,29 +8,37 @@ import { CommonService } from 'src/common/common.service';
 import { PaginatePostDto } from './dto/paginte-post.dto';
 import { ImageModel } from 'src/common/entity/image.entity';
 import { DEFAULT_POST_FIND_OPTIONS } from './const/default-post-find-options.const';
+import { SongPostModel } from './entity/songPost.entity';
+import { CreateSongPostDto } from './dto/create-song-post.dto';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectRepository(PostsModel)
     private readonly postsRepository: Repository<PostsModel>,
+    @InjectRepository(SongPostModel)
+    private readonly songPostRepository: Repository<SongPostModel>,
     @InjectRepository(ImageModel)
     private readonly imageRepository: Repository<ImageModel>,
     private readonly commonService: CommonService,
   ) {}
 
   async getAllPosts() {
-    this.postsRepository.find({
+    this.songPostRepository.find({
       ...DEFAULT_POST_FIND_OPTIONS,
     });
   }
 
-  async getPostById(id: number, qr?: QueryRunner) {
-    const repository = this.getRepository(qr);
+  async getPostById(email: string, qr?: QueryRunner) {
+    const repository = this.getSongRepository(qr);
 
     const post = await repository.findOne({
       ...DEFAULT_POST_FIND_OPTIONS,
-      where: { id },
+      where: {
+        user: {
+          email: email, // 또는 간단하게 email 만 사용해도 무방
+        },
+      },
     });
 
     if (!post) {
@@ -42,25 +50,55 @@ export class PostsService {
 
   getRepository(qr?: QueryRunner) {
     return qr
-      ? qr.manager.getRepository<PostsModel>(PostsModel)
+      ? qr.manager.getRepository<SongPostModel>(SongPostModel)
       : this.postsRepository;
   }
 
-  async createPost(authorId: number, postDto: CreatePostDto, qr?: QueryRunner) {
+  // async createPost(authorId: number, postDto: CreatePostDto, qr?: QueryRunner) {
+  //   // 1) create -> 저장할 객체를 생성한다.
+  //   // 2) save -> 객체를 저장한다. (create 메서드에서 생성한 객체로))
+
+  //   const repository = this.getRepository(qr);
+
+  //   const post = repository.create({
+  //     author: {
+  //       id: authorId,
+  //     },
+  //     ...postDto,
+  //     image: null,
+  //     song: null,
+  //     likeCount: 0,
+  //     commentCount: 0,
+  //   });
+
+  //   const newPost = await repository.save(post);
+
+  //   return newPost;
+  // }
+
+  getSongRepository(qr?: QueryRunner) {
+    return qr
+      ? qr.manager.getRepository<SongPostModel>(SongPostModel)
+      : this.songPostRepository;
+  }
+
+  async createSongPost(
+    email: string,
+    songDto: CreateSongPostDto,
+    qr?: QueryRunner,
+  ) {
     // 1) create -> 저장할 객체를 생성한다.
     // 2) save -> 객체를 저장한다. (create 메서드에서 생성한 객체로))
 
-    const repository = this.getRepository(qr);
+    const repository = this.getSongRepository(qr);
 
     const post = repository.create({
-      author: {
-        id: authorId,
+      user: {
+        email,
       },
-      ...postDto,
+      ...songDto,
       image: null,
-      music: null,
-      likeCount: 0,
-      commentCount: 0,
+      song: null,
     });
 
     const newPost = await repository.save(post);
@@ -112,7 +150,7 @@ export class PostsService {
   async paginatePosts(dto: PaginatePostDto) {
     return this.commonService.paginate(
       dto,
-      this.postsRepository,
+      this.songPostRepository,
       {
         ...DEFAULT_POST_FIND_OPTIONS,
       },

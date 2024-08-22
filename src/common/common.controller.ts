@@ -21,4 +21,13 @@ export class CommonController {
       fileName: file.filename,
     };
   }
+
+  @Post('song')
+  @UseInterceptors(FileInterceptor('song'))
+  @UseGuards(AccessTokenGuard)
+  postSong(@UploadedFile() file: Express.Multer.File) {
+    return {
+      fileName: file.filename,
+    };
+  }
 }

@@ -1,10 +1,10 @@
 import { FindManyOptions } from 'typeorm';
-import { PostsModel } from '../entity/posts.entity';
+import { SongPostModel } from '../entity/songPost.entity';
 
-export const DEFAULT_POST_FIND_OPTIONS: FindManyOptions<PostsModel> = {
+export const DEFAULT_POST_FIND_OPTIONS: FindManyOptions<SongPostModel> = {
   relations: {
-    author: true,
+    user: true,
     image: true,
-    music: true,
+    song: true,
   },
 };

@@ -17,10 +17,10 @@ export const POSTS_IMAGE_FOLDER_NAME = 'posts-image';
 export const TEMP_IMAGE_FOLDER_NAME = 'temp-image';
 
 // 포스트 음악을 저장할 폴더 이름
-export const POSTS_MUSIC_FOLDER_NAME = 'posts-music';
+export const POSTS_SONG_FOLDER_NAME = 'posts-song';
 
 // 임시 음악 폴더 이름
-export const TEMP_MUSIC_FOLDER_NAME = 'temp-music';
+export const TEMP_SONG_FOLDER_NAME = 'temp-song';
 
 // 포스트 이미지를 저장할 폴더
 // /{프로젝트의 위치}/public/posts
@@ -30,10 +30,7 @@ export const POST_IMAGE_PATH = join(
 );
 
 // 포스트 음악 저장할 폴더
-export const POST_MUSIC_PATH = join(
-  PUBLIC_FOLDER_PATH,
-  POSTS_MUSIC_FOLDER_NAME,
-);
+export const POST_SONG_PATH = join(PUBLIC_FOLDER_PATH, POSTS_SONG_FOLDER_NAME);
 
 // 절대경로 NO
 // /public/posts/xxx.jpg
@@ -44,9 +41,9 @@ export const POST_PUBLIC_IMAGE_PATH = join(
 
 // 절대경로 NO
 // /public/posts/xxx.jpg
-export const POST_PUBLIC_MUSIC_PATH = join(
+export const POST_PUBLIC_SONG_PATH = join(
   PUBLIC_FOLDER_NAME,
-  POSTS_MUSIC_FOLDER_NAME,
+  POSTS_SONG_FOLDER_NAME,
 );
 
 // 임시 파일들을 저장할 폴더
@@ -58,7 +55,7 @@ export const TEMP_IMAGE_FOLDER_PATH = join(
 
 // 임시 파일들을 저장할 폴더
 // {프로젝트 경로}/temp
-export const TEMP_MUSIC_FOLDER_PATH = join(
+export const TEMP_SONG_FOLDER_PATH = join(
   PUBLIC_FOLDER_PATH,
-  TEMP_MUSIC_FOLDER_NAME,
+  TEMP_SONG_FOLDER_NAME,
 );

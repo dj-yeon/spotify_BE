@@ -5,7 +5,7 @@ import { IsEmail, IsString } from 'class-validator';
 import { stringValidationMessage } from 'src/common/validation-message/string-validation.message';
 import { BaseModel } from 'src/common/entity/base.entity';
 
-@Entity('subscriptions')
+@Entity()
 export class Subscription extends BaseModel {
   // @PrimaryGeneratedColumn('uuid')
   // id: string;

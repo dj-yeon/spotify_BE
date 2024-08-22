@@ -6,7 +6,7 @@ import { extname } from 'path';
 import * as multer from 'multer';
 import {
   TEMP_IMAGE_FOLDER_PATH,
-  TEMP_MUSIC_FOLDER_PATH,
+  TEMP_SONG_FOLDER_PATH,
 } from 'src/common/const/path.const';
 import { v4 as uuid } from 'uuid';
 import { AuthModule } from 'src/auth/auth.module';
@@ -30,7 +30,7 @@ import { UsersModule } from 'src/users/users.module';
          */
 
         const ext = extname(file.originalname);
-        const fileType = req.body.fileType; // 요청에서 파일 유형을 확인 (예: 'image' 또는 'music')
+        const fileType = file.fieldname; // 요청에서 파일 유형을 확인 (예: 'image' 또는 'song')
 
         if (fileType === 'image') {
           if (ext !== '.jpg' && ext !== '.jpeg' && ext !== '.png') {
@@ -39,7 +39,7 @@ import { UsersModule } from 'src/users/users.module';
               false,
             );
           }
-        } else if (fileType === 'music') {
+        } else if (fileType === 'song') {
           if (ext !== '.mp3' && ext !== '.wav') {
             return cb(
               new BadRequestException('mp3/wav 파일만 업로드 가능합니다!'),
@@ -57,12 +57,12 @@ import { UsersModule } from 'src/users/users.module';
       },
       storage: multer.diskStorage({
         destination: function (req, file, cb) {
-          const fileType = req.body.fileType; // 요청에서 파일 유형을 확인
+          const fileType = file.fieldname; // 요청에서 파일 유형을 확인
 
           if (fileType === 'image') {
             cb(null, TEMP_IMAGE_FOLDER_PATH); // 이미지 파일의 임시 저장소
-          } else if (fileType === 'music') {
-            cb(null, TEMP_MUSIC_FOLDER_PATH); // 음악 파일의 임시 저장소
+          } else if (fileType === 'song') {
+            cb(null, TEMP_SONG_FOLDER_PATH); // 음악 파일의 임시 저장소
           }
         },
         filename: function (req, file, cb) {

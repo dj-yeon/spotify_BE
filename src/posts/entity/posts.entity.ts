@@ -1,7 +1,7 @@
 import { IsString } from 'class-validator';
 import { BaseModel } from 'src/common/entity/base.entity';
 import { ImageModel } from 'src/common/entity/image.entity';
-import { MusicModel } from 'src/common/entity/music.entity';
+import { SongModel } from 'src/common/entity/song.entity';
 import { stringValidationMessage } from 'src/common/validation-message/string-validation.message';
 import { UsersModel } from 'src/users/entity/users.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
@@ -27,9 +27,9 @@ export class PostsModel extends BaseModel {
   @Column()
   commentCount: number;
 
-  @OneToMany(() => ImageModel, (image) => image.post)
-  image: ImageModel;
+  // @OneToMany(() => ImageModel, (image) => image.post)
+  // image: ImageModel;
 
-  @OneToMany(() => MusicModel, (music) => music.post)
-  music: MusicModel;
+  // @OneToMany(() => SongModel, (song) => song.post)
+  // song: SongModel;
 }

@@ -7,8 +7,8 @@ import { lengthValidationMessage } from 'src/common/validation-message/length-va
 import { stringValidationMessage } from 'src/common/validation-message/string-validation.message';
 import { Exclude } from 'class-transformer';
 import { Subscription } from './subscription.entity';
-import { Song } from 'src/posts/entity/song.entity';
 import { LikedSong } from 'src/posts/entity/likedSong.entity';
+import { SongPostModel } from 'src/posts/entity/songPost.entity';
 
 @Entity()
 export class UsersModel extends BaseModel {
@@ -30,21 +30,6 @@ export class UsersModel extends BaseModel {
   @Column()
   @IsString()
   @Length(3, 8, { message: lengthValidationMessage })
-  /**
-   * Request
-   * fronted -> backend
-   * plain object (JSON) -> class instance (dto)
-   *
-   * Response
-   * backend -> frontend
-   * class instance (dto) -> plain object (JSON)
-   *
-   * toClassOnly -> class instance로 변환될때만
-   * toPlainOnly -> plain object로 변환될때만
-   *
-   * 응답이 나갈때만 exclude
-   *
-   */
   @Exclude({ toPlainOnly: true })
   password: string;
 
@@ -68,8 +53,8 @@ export class UsersModel extends BaseModel {
   @OneToMany(() => LikedSong, (likedSong) => likedSong.user)
   likedSongs: LikedSong[];
 
-  @OneToMany(() => Song, (song) => song.user)
-  songs: Song[];
+  @OneToMany(() => SongPostModel, (song) => song.user)
+  songs: SongPostModel[];
 
   @OneToMany(() => Subscription, (subscription) => subscription.user)
   subscriptions: Subscription[];

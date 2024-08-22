@@ -3,31 +3,31 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
 import { basename, join } from 'path';
 import {
-  POST_MUSIC_PATH,
-  TEMP_MUSIC_FOLDER_PATH,
+  POST_SONG_PATH,
+  TEMP_SONG_FOLDER_PATH,
 } from 'src/common/const/path.const';
 import { promises } from 'fs';
-import { MusicModel } from 'src/common/entity/music.entity';
-import { CreatePostMusicDto } from './dto/create-music.dto';
+import { SongModel } from 'src/common/entity/song.entity';
+import { CreatePostSongDto } from './dto/create-song.dto';
 
 @Injectable()
-export class PostsMusicsService {
+export class PostsSongsService {
   constructor(
-    @InjectRepository(MusicModel)
-    private readonly musicRepository: Repository<MusicModel>,
+    @InjectRepository(SongModel)
+    private readonly songRepository: Repository<SongModel>,
   ) {}
 
   getRepository(qr?: QueryRunner) {
     return qr
-      ? qr.manager.getRepository<MusicModel>(MusicModel)
-      : this.musicRepository;
+      ? qr.manager.getRepository<SongModel>(SongModel)
+      : this.songRepository;
   }
 
-  async createPostMusic(dto: CreatePostMusicDto, qr?: QueryRunner) {
+  async createPostSong(dto: CreatePostSongDto, qr?: QueryRunner) {
     const repository = this.getRepository(qr);
 
     // dto의 이미지 이름 기반, 파일 경로 생성
-    const tempFilePath = join(TEMP_MUSIC_FOLDER_PATH, dto.path);
+    const tempFilePath = join(TEMP_SONG_FOLDER_PATH, dto.path);
 
     try {
       // 파일 존재 확인
@@ -40,7 +40,7 @@ export class PostsMusicsService {
     const fileName = basename(tempFilePath);
 
     // 새로 이동할 포스트 폴더의 이동 경로 + 이미지 이름
-    const newPath = join(POST_MUSIC_PATH, fileName);
+    const newPath = join(POST_SONG_PATH, fileName);
 
     // save
     const result = await repository.save({

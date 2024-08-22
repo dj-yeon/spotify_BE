@@ -2,36 +2,36 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 import { BaseModel } from './base.entity';
 import { IsEnum, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { POST_PUBLIC_MUSIC_PATH } from '../const/path.const';
+import { POST_PUBLIC_SONG_PATH } from '../const/path.const';
 import { join } from 'path';
-import { PostsModel } from 'src/posts/entity/posts.entity';
+import { SongPostModel } from 'src/posts/entity/songPost.entity';
 
-export enum MusicModelType {
-  POST_MUSIC,
+export enum SongModelType {
+  POST_SONG,
 }
 
 @Entity()
-export class MusicModel extends BaseModel {
+export class SongModel extends BaseModel {
   // UserModel -> 사용자 프로필 이미지
   // PostsModel -> 포스트 이미지
   @Column({
-    enum: MusicModelType,
+    enum: SongModelType,
   })
-  @IsEnum(MusicModelType)
+  @IsEnum(SongModelType)
   @IsString()
-  type: MusicModelType;
+  type: SongModelType;
 
   @Column()
   @IsString()
   @Transform(({ value, obj }) => {
-    if (obj.type === MusicModelType.POST_MUSIC) {
-      return `/${join(POST_PUBLIC_MUSIC_PATH, value)}`;
+    if (obj.type === SongModelType.POST_SONG) {
+      return `/${join(POST_PUBLIC_SONG_PATH, value)}`;
     } else {
       return value;
     }
   })
   path: string;
 
-  @ManyToOne(() => PostsModel, (post) => post.music)
-  post?: PostsModel;
+  @ManyToOne(() => SongPostModel, (post) => post.song)
+  songPost?: SongPostModel;
 }

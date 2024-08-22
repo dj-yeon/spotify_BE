@@ -56,7 +56,7 @@ export class AuthService {
     return this.jwtService.sign(payload, {
       secret: this.configService.get<string>(ENV_JWT_SECRET_KEY),
       // seconds
-      expiresIn: isRefreshToken ? 3600 : 300,
+      // expiresIn: isRefreshToken ? 3600 : 300,
     });
   }
 
