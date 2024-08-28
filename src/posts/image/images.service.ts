@@ -27,7 +27,7 @@ export class PostsImagesService {
     const repository = this.getRepository(qr);
 
     // dto의 이미지 이름 기반, 파일 경로 생성
-    const tempFilePath = join(TEMP_IMAGE_FOLDER_PATH, dto.path);
+    const tempFilePath = join(TEMP_IMAGE_FOLDER_PATH, dto.fileName);
 
     try {
       // 파일 존재 확인

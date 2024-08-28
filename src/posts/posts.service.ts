@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { QueryRunner, Repository } from 'typeorm';
 import { PostsModel } from './entity/posts.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreatePostDto } from './dto/create-post.dto';
+// import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { CommonService } from 'src/common/common.service';
 import { PaginatePostDto } from './dto/paginte-post.dto';
@@ -84,7 +84,7 @@ export class PostsService {
 
   async createSongPost(
     email: string,
-    songDto: CreateSongPostDto,
+    songPostDto: CreateSongPostDto,
     qr?: QueryRunner,
   ) {
     // 1) create -> 저장할 객체를 생성한다.
@@ -96,9 +96,7 @@ export class PostsService {
       user: {
         email,
       },
-      ...songDto,
-      image: null,
-      song: null,
+      ...songPostDto,
     });
 
     const newPost = await repository.save(post);

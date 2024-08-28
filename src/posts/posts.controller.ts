@@ -16,7 +16,6 @@ import { PostsService } from './posts.service';
 import { AccessTokenGuard } from 'src/auth/guard/bearer-token.guard';
 import { UsersModel } from 'src/users/entity/users.entity';
 import { User } from 'src/users/decorator/user.decorator';
-import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PaginatePostDto } from './dto/paginte-post.dto';
 import { ImageModelType } from 'src/common/entity/image.entity';
@@ -44,48 +43,6 @@ export class PostsController {
     return this.postsService.paginatePosts(query);
   }
 
-  // // ':': pathParameter
-  // @Get(':id')
-  // @UseInterceptors(LogInterceptor)
-  // // @UseFilters(HttpExceptionFilter)
-  // getPost(@Param('id', ParseIntPipe) id: number) {
-  //   //    throw new BadRequestException('test error');
-
-  //   return this.postsService.getPostById(id);
-  // }
-
-  // // POST METHOD
-  // @Post()
-  // @UseGuards(AccessTokenGuard)
-  // @UseInterceptors(TransactionInterceptor)
-  // async postPosts(
-  //   @User() user: UsersModel,
-  //   @Body() body: CreatePostDto,
-  //   @QueryRunner() qr: QR,
-  // ) {
-  //   const post = await this.postsService.createPost(user.id, body, qr);
-
-  //   await this.postImageService.createPostImage(
-  //     {
-  //       post,
-  //       path: body.image,
-  //       type: ImageModelType.POST_IMAGE,
-  //     },
-  //     qr,
-  //   );
-
-  //   await this.postSongService.createPostSong(
-  //     {
-  //       post,
-  //       path: body.image,
-  //       type: SongModelType.POST_SONG,
-  //     },
-  //     qr,
-  //   );
-
-  //   return this.postsService.getPostById(post.id, qr);
-  // }
-
   @Post('song')
   @UseGuards(AccessTokenGuard)
   @UseInterceptors(TransactionInterceptor)
@@ -95,9 +52,6 @@ export class PostsController {
     @QueryRunner() qr: QR,
   ) {
     try {
-      console.log('user', user);
-      console.log('body', body);
-
       const songPost = await this.postsService.createSongPost(
         user.email,
         body,
@@ -107,7 +61,7 @@ export class PostsController {
       await this.postImageService.createPostImage(
         {
           songPost,
-          path: body.image,
+          fileName: body.imageFileName,
           type: ImageModelType.POST_IMAGE,
         },
         qr,
@@ -116,7 +70,7 @@ export class PostsController {
       await this.postSongService.createPostSong(
         {
           songPost,
-          path: body.song,
+          fileName: body.songFileName,
           type: SongModelType.POST_SONG,
         },
         qr,

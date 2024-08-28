@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, OneToOne, Unique } from 'typeorm';
 import { BaseModel } from './base.entity';
 import { IsEnum, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
@@ -11,11 +11,14 @@ export enum ImageModelType {
 }
 
 @Entity()
+@Unique(['fileName']) // path 필드에 고유 제약 조건 추가
 export class ImageModel extends BaseModel {
   // UserModel -> 사용자 프로필 이미지
   // PostsModel -> 포스트 이미지
   @Column({
+    type: 'varchar', // 열거형을 문자열로 저장하도록 설정
     enum: ImageModelType,
+    default: ImageModelType.POST_IMAGE, // 기본값 설정
   })
   @IsEnum(ImageModelType)
   @IsString()
@@ -30,8 +33,8 @@ export class ImageModel extends BaseModel {
       return value;
     }
   })
-  path: string;
+  fileName: string;
 
-  @ManyToOne(() => SongPostModel, (post) => post.image)
-  songPost?: SongPostModel;
+  @OneToOne(() => SongPostModel)
+  songPost: SongPostModel;
 }

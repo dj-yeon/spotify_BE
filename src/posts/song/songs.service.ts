@@ -27,7 +27,7 @@ export class PostsSongsService {
     const repository = this.getRepository(qr);
 
     // dto의 이미지 이름 기반, 파일 경로 생성
-    const tempFilePath = join(TEMP_SONG_FOLDER_PATH, dto.path);
+    const tempFilePath = join(TEMP_SONG_FOLDER_PATH, dto.fileName);
 
     try {
       // 파일 존재 확인
@@ -46,6 +46,8 @@ export class PostsSongsService {
     const result = await repository.save({
       ...dto,
     });
+
+    console.log('********* song result', result);
 
     // 파일 옮기기
     await promises.rename(tempFilePath, newPath);
