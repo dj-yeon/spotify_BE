@@ -4,17 +4,23 @@ import {
   FindManyOptions,
   FindOptionsOrder,
   FindOptionsWhere,
-  MoreThan,
+  // MoreThan,
   Repository,
 } from 'typeorm';
 import { BaseModel } from './entity/base.entity';
 import { FILTER_MAPPER } from './const/filter-mapper.const';
 import { ConfigService } from '@nestjs/config';
 import { ENV_HOST_KEY, ENV_PROTOCOL_KEY } from './const/env-keys.const';
+import { SongPostModel } from 'src/posts/entity/songPost.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class CommonService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    @InjectRepository(SongPostModel)
+    private songsRepository: Repository<SongPostModel>,
+  ) {}
 
   paginate<T extends BaseModel>(
     dto: BasePaginationDto,
@@ -259,5 +265,11 @@ export class CommonService {
     }
 
     return options;
+  }
+
+  async findOneById(id: string): Promise<SongPostModel | undefined> {
+    return this.songsRepository.findOne({
+      where: { id: +id },
+    });
   }
 }

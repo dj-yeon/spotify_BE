@@ -11,6 +11,8 @@ import {
 import { v4 as uuid } from 'uuid';
 import { AuthModule } from 'src/auth/auth.module';
 import { UsersModule } from 'src/users/users.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { SongPostModel } from 'src/posts/entity/songPost.entity';
 
 @Module({
   imports: [
@@ -70,6 +72,7 @@ import { UsersModule } from 'src/users/users.module';
         },
       }),
     }),
+    TypeOrmModule.forFeature([SongPostModel]),
   ],
   controllers: [CommonController],
   providers: [CommonService],

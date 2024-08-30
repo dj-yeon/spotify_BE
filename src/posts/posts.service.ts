@@ -29,6 +29,15 @@ export class PostsService {
     });
   }
 
+  async getSongs(): Promise<SongPostModel[]> {
+    return this.songPostRepository.find({
+      order: {
+        createdAt: 'DESC',
+      },
+      ...DEFAULT_POST_FIND_OPTIONS,
+    });
+  }
+
   async getPostById(email: string, qr?: QueryRunner) {
     const repository = this.getSongRepository(qr);
 

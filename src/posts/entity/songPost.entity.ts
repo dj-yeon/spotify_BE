@@ -2,8 +2,8 @@ import { UsersModel } from 'src/users/entity/users.entity';
 import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { LikedSong } from './likedSong.entity';
 import { BaseModel } from 'src/common/entity/base.entity';
-import { ImageModel } from 'src/common/entity/image.entity';
-import { SongModel } from 'src/common/entity/song.entity';
+// import { ImageModel } from 'src/common/entity/image.entity';
+// import { SongModel } from 'src/common/entity/song.entity';
 import { IsString } from 'class-validator';
 
 @Entity()

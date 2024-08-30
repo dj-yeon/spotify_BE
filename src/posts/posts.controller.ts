@@ -27,6 +27,7 @@ import { QueryRunner } from 'src/common/decorator/query-runner.decorator';
 import { PostsSongsService } from './song/songs.service';
 import { SongModelType } from 'src/common/entity/song.entity';
 import { CreateSongPostDto } from './dto/create-song-post.dto';
+import { SongPostModel } from './entity/songPost.entity';
 
 @Controller('posts')
 export class PostsController {
@@ -37,10 +38,15 @@ export class PostsController {
     private readonly postSongService: PostsSongsService,
   ) {}
 
+  // @Get()
+  // @UseInterceptors(LogInterceptor)
+  // getPosts(@Query() query: PaginatePostDto) {
+  //   return this.postsService.paginatePosts(query);
+  // }
+
   @Get()
-  @UseInterceptors(LogInterceptor)
-  getPosts(@Query() query: PaginatePostDto) {
-    return this.postsService.paginatePosts(query);
+  async findAll(): Promise<SongPostModel[]> {
+    return this.postsService.getSongs();
   }
 
   @Post('song')
