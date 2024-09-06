@@ -105,4 +105,43 @@ export class PostsController {
   deletePost(@Param('id', ParseIntPipe) id: number) {
     return this.postsService.deletePost(id);
   }
+
+  @Get('getLikedSongs')
+  @UseGuards(AccessTokenGuard)
+  @UseInterceptors(TransactionInterceptor)
+  async getLikedSongs(@User() user: UsersModel) {
+    return this.postsService.getLikedSongs(user.email);
+  }
+
+  @Get('isLikedSong/:songId')
+  @UseGuards(AccessTokenGuard)
+  @UseInterceptors(TransactionInterceptor)
+  async isLiked(@User() user: UsersModel, @Param('songId') songId: string) {
+    console.log('**** songId', songId);
+
+    return { isLiked: await this.postsService.isLikedSong(user.email, songId) };
+  }
+
+  @Post('likedSong')
+  @UseGuards(AccessTokenGuard)
+  @UseInterceptors(TransactionInterceptor)
+  async addLike(@User() user: UsersModel, @Body('songId') songId: string) {
+    await this.postsService.addLike(user.email, songId);
+    return { message: 'Liked successfully' };
+  }
+
+  @Delete('likedSong/:songId')
+  @UseGuards(AccessTokenGuard)
+  @UseInterceptors(TransactionInterceptor)
+  async removeLike(@User() user: UsersModel, @Param('songId') songId: string) {
+    await this.postsService.removeLike(user.email, songId);
+    return { message: 'Like removed successfully' };
+  }
+
+  @Get('getSongsByUserId')
+  @UseGuards(AccessTokenGuard)
+  @UseInterceptors(TransactionInterceptor)
+  async getSongsByUserId(@User() user: UsersModel) {
+    return this.postsService.getSongsByUserId(user.email);
+  }
 }

@@ -10,17 +10,20 @@ import { ImageModel } from 'src/common/entity/image.entity';
 import { DEFAULT_POST_FIND_OPTIONS } from './const/default-post-find-options.const';
 import { SongPostModel } from './entity/songPost.entity';
 import { CreateSongPostDto } from './dto/create-song-post.dto';
+import { LikedSong } from './entity/likedSong.entity';
 
 @Injectable()
 export class PostsService {
   constructor(
+    private readonly commonService: CommonService,
     @InjectRepository(PostsModel)
     private readonly postsRepository: Repository<PostsModel>,
     @InjectRepository(SongPostModel)
     private readonly songPostRepository: Repository<SongPostModel>,
     @InjectRepository(ImageModel)
     private readonly imageRepository: Repository<ImageModel>,
-    private readonly commonService: CommonService,
+    @InjectRepository(LikedSong)
+    private likedSongRepository: Repository<LikedSong>,
   ) {}
 
   async getAllPosts() {
@@ -163,5 +166,76 @@ export class PostsService {
       },
       'posts',
     );
+  }
+
+  async getLikedSongs(userEmail: string): Promise<SongPostModel[]> {
+    const likedSongList = await this.likedSongRepository.find({
+      where: {
+        user: { email: userEmail },
+      },
+      relations: ['song'],
+    });
+
+    console.log('********* likedSongList', likedSongList);
+
+    return likedSongList.map((likedSong) => likedSong.song);
+  }
+
+  async isLikedSong(userEmail: string, songId: string): Promise<boolean> {
+    const likedSong = await this.likedSongRepository.findOne({
+      where: {
+        user: { email: userEmail },
+        song: { id: +songId },
+      },
+      relations: ['user', 'song'],
+    });
+
+    return !!likedSong;
+  }
+
+  async addLike(userEmail: string, songId: string): Promise<void> {
+    const likedSong = this.likedSongRepository.create({
+      user: { email: userEmail },
+      song: { id: +songId },
+    });
+
+    await this.likedSongRepository.save(likedSong);
+  }
+
+  async removeLike(userEmail: string, songId: string): Promise<void> {
+    const likedSong = await this.likedSongRepository.findOne({
+      where: {
+        user: { email: userEmail },
+        song: { id: +songId },
+      },
+      relations: ['user', 'song'],
+    });
+
+    if (!likedSong) {
+      throw new NotFoundException('Like not found');
+    }
+
+    await this.likedSongRepository.remove(likedSong);
+  }
+
+  async getSongsByUserId(userEmail: string): Promise<SongPostModel[]> {
+    const mySongList = await this.songPostRepository.find({
+      where: {
+        user: { email: userEmail },
+      },
+    });
+
+    return mySongList.map((songPost) => ({
+      ...songPost,
+      id: songPost.id,
+      title: songPost.title,
+      author: songPost.author,
+      user: songPost.user,
+      imageFileName: songPost.imageFileName,
+      songFileName: songPost.songFileName,
+      likedByUsers: songPost.likedByUsers,
+      createdAt: songPost.createdAt,
+      updatedAt: songPost.updatedAt,
+    }));
   }
 }
