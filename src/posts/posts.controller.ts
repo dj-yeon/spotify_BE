@@ -117,7 +117,6 @@ export class PostsController {
   @UseGuards(AccessTokenGuard)
   @UseInterceptors(TransactionInterceptor)
   async isLiked(@User() user: UsersModel, @Param('songId') songId: string) {
-    console.log('**** songId', songId);
 
     return { isLiked: await this.postsService.isLikedSong(user.email, songId) };
   }

@@ -176,7 +176,6 @@ export class PostsService {
       relations: ['song'],
     });
 
-    console.log('********* likedSongList', likedSongList);
 
     return likedSongList.map((likedSong) => likedSong.song);
   }

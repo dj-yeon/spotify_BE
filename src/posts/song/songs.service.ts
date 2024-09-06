@@ -47,8 +47,6 @@ export class PostsSongsService {
       ...dto,
     });
 
-    console.log('********* song result', result);
-
     // 파일 옮기기
     await promises.rename(tempFilePath, newPath);
 
