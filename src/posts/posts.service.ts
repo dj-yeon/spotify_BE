@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { QueryRunner, Repository } from 'typeorm';
+import { Like, QueryRunner, Repository } from 'typeorm';
 import { PostsModel } from './entity/posts.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 // import { CreatePostDto } from './dto/create-post.dto';
@@ -221,6 +221,30 @@ export class PostsService {
     const mySongList = await this.songPostRepository.find({
       where: {
         user: { email: userEmail },
+      },
+    });
+
+    return mySongList.map((songPost) => ({
+      ...songPost,
+      id: songPost.id,
+      title: songPost.title,
+      author: songPost.author,
+      user: songPost.user,
+      imageFileName: songPost.imageFileName,
+      songFileName: songPost.songFileName,
+      likedByUsers: songPost.likedByUsers,
+      createdAt: songPost.createdAt,
+      updatedAt: songPost.updatedAt,
+    }));
+  }
+
+  async getSongsByTitle(
+    userEmail: string,
+    title: string,
+  ): Promise<SongPostModel[]> {
+    const mySongList = await this.songPostRepository.find({
+      where: {
+        title: Like(`%${title}%`),
       },
     });
 

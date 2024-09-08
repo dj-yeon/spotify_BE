@@ -117,7 +117,6 @@ export class PostsController {
   @UseGuards(AccessTokenGuard)
   @UseInterceptors(TransactionInterceptor)
   async isLiked(@User() user: UsersModel, @Param('songId') songId: string) {
-
     return { isLiked: await this.postsService.isLikedSong(user.email, songId) };
   }
 
@@ -142,5 +141,15 @@ export class PostsController {
   @UseInterceptors(TransactionInterceptor)
   async getSongsByUserId(@User() user: UsersModel) {
     return this.postsService.getSongsByUserId(user.email);
+  }
+
+  @Get('getSongsByTitle')
+  @UseGuards(AccessTokenGuard)
+  @UseInterceptors(TransactionInterceptor)
+  async getSongsByTitle(
+    @User() user: UsersModel,
+    @Query('title') title: string,
+  ) {
+    return this.postsService.getSongsByTitle(user.email, title);
   }
 }
