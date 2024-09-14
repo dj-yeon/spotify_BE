@@ -190,4 +190,10 @@ export class AuthService {
       isRefreshToken,
     );
   }
+
+  async getUserDetail(userEmail: string): Promise<UsersModel> {
+    const userDetail = await this.usersService.getUserByEmail(userEmail);
+
+    return userDetail;
+  }
 }

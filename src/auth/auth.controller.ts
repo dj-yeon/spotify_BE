@@ -1,8 +1,20 @@
-import { Body, Controller, Headers, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { BasicTokenGuard } from './guard/basic-token.guard';
-import { RefreshTokenGuard } from './guard/bearer-token.guard';
+import {
+  AccessTokenGuard,
+  RefreshTokenGuard,
+} from './guard/bearer-token.guard';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { User } from 'src/users/decorator/user.decorator';
+import { UsersModel } from 'src/users/entity/users.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -39,6 +51,7 @@ export class AuthController {
     // 풀어서 -> email:password로 만들어야함
     // 클라이언트에서 서버로 보낼 때, id,pwd 형태가 아닌,
     // 'Basic {email:password를 base64로 인코딩한 형태}'로 보냄
+
     const token = this.authService.extractTokenFromHeader(rawToken, false);
 
     const credentials = this.authService.decodeBasicToken(token);
@@ -49,5 +62,11 @@ export class AuthController {
   @Post('register/email')
   postRegisterEmail(@Body() body: RegisterUserDto) {
     return this.authService.registerWithEmail(body);
+  }
+
+  @Get('userdetail')
+  @UseGuards(AccessTokenGuard)
+  async getUserDetail(@User() user: UsersModel) {
+    return this.authService.getUserDetail(user.email);
   }
 }
