@@ -108,11 +108,6 @@ export class CommonService {
       next: nextUrl?.toString() ?? null,
     };
 
-    // 콘솔에 찍는 코드
-    console.log('********* Cursor After:', response.cursor.after);
-    console.log('********* Count:', response.count);
-    console.log('********* Next URL:', response.next);
-
     return response;
   }
 

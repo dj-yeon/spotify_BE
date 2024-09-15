@@ -229,9 +229,7 @@ export class PostsService {
     title: string,
   ): Promise<SongPostModel[]> {
     const mySongList = await this.songPostRepository.find({
-      where: {
-        title: Like(`%${title}%`),
-      },
+      where: [{ title: Like(`%${title}%`) }, { author: Like(`%${title}%`) }],
     });
 
     return mySongList.map((songPost) => ({
