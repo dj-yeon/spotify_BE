@@ -15,6 +15,7 @@ import {
 import { RegisterUserDto } from './dto/register-user.dto';
 import { User } from 'src/users/decorator/user.decorator';
 import { UsersModel } from 'src/users/entity/users.entity';
+import { IsPublic } from 'src/common/decorator/is-public.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -46,6 +47,7 @@ export class AuthController {
 
   @Post('login/email')
   @UseGuards(BasicTokenGuard)
+  @IsPublic()
   postLoginEmail(@Headers('Authorization') rawToken: string) {
     // email:password -> base64
     // 풀어서 -> email:password로 만들어야함
@@ -60,12 +62,13 @@ export class AuthController {
   }
 
   @Post('register/email')
+  @IsPublic()
   postRegisterEmail(@Body() body: RegisterUserDto) {
     return this.authService.registerWithEmail(body);
   }
 
   @Get('userdetail')
-  @UseGuards(AccessTokenGuard)
+  // @UseGuards(AccessTokenGuard)
   async getUserDetail(@User() user: UsersModel) {
     return this.authService.getUserDetail(user.email);
   }

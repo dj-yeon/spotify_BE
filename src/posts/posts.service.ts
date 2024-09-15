@@ -32,13 +32,22 @@ export class PostsService {
     });
   }
 
-  async getSongs(): Promise<SongPostModel[]> {
-    return this.songPostRepository.find({
-      order: {
-        createdAt: 'DESC',
-      },
-      ...DEFAULT_POST_FIND_OPTIONS,
-    });
+  // async getSongs(): Promise<SongPostModel[]> {
+  //   return this.songPostRepository.find({
+  //     order: {
+  //       createdAt: 'DESC',
+  //     },
+  //     ...DEFAULT_POST_FIND_OPTIONS,
+  //   });
+  // }
+
+  async getSongs(query: PaginatePostDto, path: string): Promise<any> {
+    return this.commonService.paginate(
+      query,
+      this.songPostRepository,
+      {},
+      path,
+    );
   }
 
   async getPostById(email: string, qr?: QueryRunner) {
@@ -65,28 +74,6 @@ export class PostsService {
       ? qr.manager.getRepository<SongPostModel>(SongPostModel)
       : this.postsRepository;
   }
-
-  // async createPost(authorId: number, postDto: CreatePostDto, qr?: QueryRunner) {
-  //   // 1) create -> 저장할 객체를 생성한다.
-  //   // 2) save -> 객체를 저장한다. (create 메서드에서 생성한 객체로))
-
-  //   const repository = this.getRepository(qr);
-
-  //   const post = repository.create({
-  //     author: {
-  //       id: authorId,
-  //     },
-  //     ...postDto,
-  //     image: null,
-  //     song: null,
-  //     likeCount: 0,
-  //     commentCount: 0,
-  //   });
-
-  //   const newPost = await repository.save(post);
-
-  //   return newPost;
-  // }
 
   getSongRepository(qr?: QueryRunner) {
     return qr
@@ -176,7 +163,6 @@ export class PostsService {
       relations: ['song'],
     });
 
-
     return likedSongList.map((likedSong) => likedSong.song);
   }
 
@@ -260,5 +246,19 @@ export class PostsService {
       createdAt: songPost.createdAt,
       updatedAt: songPost.updatedAt,
     }));
+  }
+
+  async isPostMine(userId: number, postId: number) {
+    return this.postsRepository.exists({
+      where: {
+        id: postId,
+        author: {
+          id: userId,
+        },
+      },
+      relations: {
+        author: true,
+      },
+    });
   }
 }

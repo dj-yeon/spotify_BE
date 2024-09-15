@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { RolesEnum } from '../const/roles.const';
 import { PostsModel } from 'src/posts/entity/posts.entity';
 import { BaseModel } from 'src/common/entity/base.entity';
-import { IsEmail, IsString, Length } from 'class-validator';
+import { IsEmail, IsEnum, IsString, Length } from 'class-validator';
 import { lengthValidationMessage } from 'src/common/validation-message/length-validation.message';
 import { stringValidationMessage } from 'src/common/validation-message/string-validation.message';
 import { Exclude } from 'class-transformer';
@@ -34,21 +34,15 @@ export class UsersModel extends BaseModel {
   password: string;
 
   @Column({
-    enum: Object.values(RolesEnum),
-    default: RolesEnum.USER,
+    type: 'enum', // enum을 위한 type 설정 추가
+    enum: RolesEnum, // enum 값
+    default: RolesEnum.USER, // 기본값
   })
+  @IsEnum(RolesEnum, { message: 'Invalid role. Must be USER or ADMIN' }) // IsEnum 데코레이터 추가
   role: RolesEnum;
-
-  // @Expose()
-  // get nicknameAndEmail() {
-  //   return this.nickname + '/' + this.email;
-  // }
 
   @OneToMany(() => PostsModel, (post) => post.author)
   posts: PostsModel[];
-
-  // @OneToMany(() => CommentsModel, (comment) => comment.author)
-  // postComments: CommentsModel[];
 
   @OneToMany(() => LikedSong, (likedSong) => likedSong.user)
   likedSongs: LikedSong[];

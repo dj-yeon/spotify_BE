@@ -13,7 +13,9 @@ export class UsersService {
     private readonly subscriptionRepository: Repository<Subscription>,
   ) {}
 
-  async createUser(user: Pick<UsersModel, 'nickname' | 'email' | 'password'>) {
+  async createUser(
+    user: Pick<UsersModel, 'nickname' | 'email' | 'password' | 'role'>,
+  ) {
     // 1) nickname 중복이 없는지 확인
     const nicknameExists = await this.userRepository.exists({
       where: {
@@ -39,6 +41,7 @@ export class UsersService {
       nickname: user.nickname,
       email: user.email,
       password: user.password,
+      role: user.role,
     });
 
     const newUser = await this.userRepository.save(userObject);

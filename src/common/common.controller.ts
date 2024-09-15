@@ -18,14 +18,18 @@ import { AccessTokenGuard } from 'src/auth/guard/bearer-token.guard';
 import { POST_IMAGE_PATH, POST_SONG_PATH } from './const/path.const';
 import { CommonService } from './common.service';
 import { SongPostModel } from 'src/posts/entity/songPost.entity';
+import { IsPublic } from './decorator/is-public.decorator';
+import { Roles } from 'src/users/decorator/roles.decorator';
+import { RolesEnum } from 'src/users/const/roles.const';
 
 @Controller('common')
 export class CommonController {
   constructor(private readonly commonService: CommonService) {}
 
   @Post('image')
+  @Roles(RolesEnum.ADMIN)
   @UseInterceptors(FileInterceptor('image'))
-  @UseGuards(AccessTokenGuard)
+  // @UseGuards(AccessTokenGuard)
   postImage(@UploadedFile() file: Express.Multer.File) {
     return {
       fileName: file.filename,
@@ -33,8 +37,9 @@ export class CommonController {
   }
 
   @Post('song')
+  @Roles(RolesEnum.ADMIN)
   @UseInterceptors(FileInterceptor('song'))
-  @UseGuards(AccessTokenGuard)
+  // @UseGuards(AccessTokenGuard)
   postSong(@UploadedFile() file: Express.Multer.File) {
     return {
       fileName: file.filename,
@@ -42,6 +47,7 @@ export class CommonController {
   }
 
   @Get('image/:fileName')
+  @IsPublic()
   async getImage(@Param('fileName') fileName: string, @Res() res: Response) {
     const imagePath = join(POST_IMAGE_PATH, fileName);
 
@@ -55,6 +61,7 @@ export class CommonController {
   }
 
   @Get('song/:filename')
+  @IsPublic()
   getSong(@Param('filename') fileName: string, @Res() res: Response) {
     const songPathPath = join(POST_SONG_PATH, fileName);
 
@@ -62,6 +69,7 @@ export class CommonController {
   }
 
   @Get('getsongbyid/:id')
+  @IsPublic()
   async getSongById(@Param('id') id: string): Promise<SongPostModel> {
     const song = await this.commonService.findOneById(id);
     if (!song) {

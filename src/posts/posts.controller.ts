@@ -5,29 +5,23 @@ import {
   Get,
   InternalServerErrorException,
   Param,
-  ParseIntPipe,
-  Patch,
   Post,
   Query,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { AccessTokenGuard } from 'src/auth/guard/bearer-token.guard';
 import { UsersModel } from 'src/users/entity/users.entity';
 import { User } from 'src/users/decorator/user.decorator';
-import { UpdatePostDto } from './dto/update-post.dto';
 import { PaginatePostDto } from './dto/paginte-post.dto';
 import { ImageModelType } from 'src/common/entity/image.entity';
 import { DataSource, QueryRunner as QR } from 'typeorm';
 import { PostsImagesService } from './image/images.service';
-import { LogInterceptor } from 'src/common/interceptor/log.interceptor';
 import { TransactionInterceptor } from 'src/common/interceptor/transaction.interceptor';
 import { QueryRunner } from 'src/common/decorator/query-runner.decorator';
 import { PostsSongsService } from './song/songs.service';
 import { SongModelType } from 'src/common/entity/song.entity';
 import { CreateSongPostDto } from './dto/create-song-post.dto';
-import { SongPostModel } from './entity/songPost.entity';
+import { IsPublic } from 'src/common/decorator/is-public.decorator';
 
 @Controller('posts')
 export class PostsController {
@@ -38,19 +32,16 @@ export class PostsController {
     private readonly postSongService: PostsSongsService,
   ) {}
 
-  // @Get()
-  // @UseInterceptors(LogInterceptor)
-  // getPosts(@Query() query: PaginatePostDto) {
-  //   return this.postsService.paginatePosts(query);
-  // }
-
   @Get()
-  async findAll(): Promise<SongPostModel[]> {
-    return this.postsService.getSongs();
+  @IsPublic()
+  async findAll(@Query() query: PaginatePostDto): Promise<any> {
+    const path = 'posts'; // 커서 페이지네이션을 위한 URL 경로
+    console.log('********* query', query);
+    return this.postsService.getSongs(query, path);
   }
 
   @Post('song')
-  @UseGuards(AccessTokenGuard)
+  // @UseGuards(AccessTokenGuard)
   @UseInterceptors(TransactionInterceptor)
   async songPosts(
     @User() user: UsersModel,
@@ -91,37 +82,22 @@ export class PostsController {
     }
   }
 
-  // PATCH METHOD
-  @Patch(':id')
-  patchPost(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() body: UpdatePostDto,
-  ) {
-    return this.postsService.updatePost(id, body);
-  }
-
-  //DELETE METHOD
-  @Delete(':id')
-  deletePost(@Param('id', ParseIntPipe) id: number) {
-    return this.postsService.deletePost(id);
-  }
-
   @Get('getLikedSongs')
-  @UseGuards(AccessTokenGuard)
+  // @UseGuards(AccessTokenGuard)
   @UseInterceptors(TransactionInterceptor)
   async getLikedSongs(@User() user: UsersModel) {
     return this.postsService.getLikedSongs(user.email);
   }
 
   @Get('isLikedSong/:songId')
-  @UseGuards(AccessTokenGuard)
+  // @UseGuards(AccessTokenGuard)
   @UseInterceptors(TransactionInterceptor)
   async isLiked(@User() user: UsersModel, @Param('songId') songId: string) {
     return { isLiked: await this.postsService.isLikedSong(user.email, songId) };
   }
 
   @Post('likedSong')
-  @UseGuards(AccessTokenGuard)
+  // @UseGuards(AccessTokenGuard)
   @UseInterceptors(TransactionInterceptor)
   async addLike(@User() user: UsersModel, @Body('songId') songId: string) {
     await this.postsService.addLike(user.email, songId);
@@ -129,7 +105,7 @@ export class PostsController {
   }
 
   @Delete('likedSong/:songId')
-  @UseGuards(AccessTokenGuard)
+  // @UseGuards(AccessTokenGuard)
   @UseInterceptors(TransactionInterceptor)
   async removeLike(@User() user: UsersModel, @Param('songId') songId: string) {
     await this.postsService.removeLike(user.email, songId);
@@ -137,14 +113,14 @@ export class PostsController {
   }
 
   @Get('getSongsByUserId')
-  @UseGuards(AccessTokenGuard)
+  // @UseGuards(AccessTokenGuard)
   @UseInterceptors(TransactionInterceptor)
   async getSongsByUserId(@User() user: UsersModel) {
     return this.postsService.getSongsByUserId(user.email);
   }
 
   @Get('getSongsByTitle')
-  @UseGuards(AccessTokenGuard)
+  // @UseGuards(AccessTokenGuard)
   @UseInterceptors(TransactionInterceptor)
   async getSongsByTitle(
     @User() user: UsersModel,

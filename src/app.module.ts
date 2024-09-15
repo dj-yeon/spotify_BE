@@ -14,7 +14,7 @@ import { UsersModule } from './users/users.module';
 import { UsersModel } from './users/entity/users.entity';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import {
   ENV_DB_DATABASE_KEY,
@@ -33,6 +33,9 @@ import { Product } from './posts/entity/product.entity';
 import { Subscription } from './users/entity/subscription.entity';
 import { SongModel } from './common/entity/song.entity';
 import { SongPostModel } from './posts/entity/songPost.entity';
+
+import { RolesGuard } from './users/guard/roles.guard';
+import { AccessTokenGuard } from './auth/guard/bearer-token.guard';
 
 @Module({
   imports: [
@@ -73,6 +76,8 @@ import { SongPostModel } from './posts/entity/songPost.entity';
   providers: [
     AppService,
     { provide: APP_INTERCEPTOR, useClass: ClassSerializerInterceptor },
+    { provide: APP_GUARD, useClass: AccessTokenGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
   ],
 })
 export class AppModule implements NestModule {
