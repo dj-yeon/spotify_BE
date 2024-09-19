@@ -23,7 +23,7 @@ import { SongModelType } from 'src/common/entity/song.entity';
 import { CreateSongPostDto } from './dto/create-song-post.dto';
 import { IsPublic } from 'src/common/decorator/is-public.decorator';
 
-@Controller('posts')
+@Controller('api/posts')
 export class PostsController {
   constructor(
     private readonly postsService: PostsService,

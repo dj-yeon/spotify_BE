@@ -20,10 +20,11 @@ async function bootstrap() {
 
   // CORS 설정
   app.enableCors({
-    origin: 'http://localhost:3000', // React/Next.js 애플리케이션의 주소
+    origin: process.env.NEXT_PUBLIC_SERVER_BASE_URL,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // 쿠키를 사용한 인증이 필요할 경우
   });
-  await app.listen(8000);
+
+  await app.listen(8000, '0.0.0.0');
 }
 bootstrap();

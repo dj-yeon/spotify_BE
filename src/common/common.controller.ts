@@ -22,7 +22,7 @@ import { IsPublic } from './decorator/is-public.decorator';
 import { Roles } from 'src/users/decorator/roles.decorator';
 import { RolesEnum } from 'src/users/const/roles.const';
 
-@Controller('common')
+@Controller('api/common')
 export class CommonController {
   constructor(private readonly commonService: CommonService) {}
 
