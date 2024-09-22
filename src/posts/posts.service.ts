@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Like, QueryRunner, Repository } from 'typeorm';
+import { ILike, Like, QueryRunner, Repository } from 'typeorm';
 import { PostsModel } from './entity/posts.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 // import { CreatePostDto } from './dto/create-post.dto';
@@ -229,7 +229,7 @@ export class PostsService {
     title: string,
   ): Promise<SongPostModel[]> {
     const mySongList = await this.songPostRepository.find({
-      where: [{ title: Like(`%${title}%`) }, { author: Like(`%${title}%`) }],
+      where: [{ title: ILike(`%${title}%`) }, { author: ILike(`%${title}%`) }],
     });
 
     return mySongList.map((songPost) => ({
