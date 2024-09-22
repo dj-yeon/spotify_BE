@@ -1,73 +1,69 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Spotify Clone
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project is a music platform clone built using React, Next.js 13 (with Server-Side Rendering), Docker, and AWS (EC2, Load Balancer). The backend is powered by NestJS, while the frontend is implemented with React and Next.js.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## References
 
-## Description
+The design and React portion of this project were inspired by the following tutorial:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- [CodeWithAntonio - Spotify Clone with React, Next.js, Tailwind CSS & Supabase](https://www.youtube.com/watch?v=2aeMRB8LL4o&ab_channel=CodeWithAntonio)
 
-## Installation
+## Table of Contents
 
-```bash
-$ yarn install
-```
+- [Project Overview](#project-overview)
+- [Features](#features)
+- [Technology Stack](#technology-stack)
+- [Setup Instructions](#setup-instructions)
+  - [Backend Setup](#backend-setup)
+  - [Frontend Setup](#frontend-setup)
+- [Usage](#usage)
+- [License](#license)
 
-## Running the app
+## Project Overview
 
-```bash
-# development
-$ yarn run start
+This project replicates core functionality of a music platform where users can browse music, like tracks, and search for songs. It provides the following features:
 
-# watch mode
-$ yarn run start:dev
+- Home page: Display a list of tracks.
+- Liked page: Show tracks liked by the user.
+- Search page: Allow users to search for music.
+- Modals: For user signup, login, and music upload.
 
-# production mode
-$ yarn run start:prod
-```
+The app is deployed using AWS services, with EC2 instances running the application and an Elastic Load Balancer for managing port number.
 
-## Test
+## Features
 
-```bash
-# unit tests
-$ yarn run test
+- Home Page: Browse music tracks.
+- Liked Page: Manage liked tracks.
+- Search Page: Find songs using a search function.
+- Modals:
+  - Sign-Up: New user registration.
+  - Login: User authentication.
+  - Upload: Upload music tracks.
 
-# e2e tests
-$ yarn run test:e2e
+## Technology Stack
 
-# test coverage
-$ yarn run test:cov
-```
+### Frontend:
 
-## Support
+- React
+- Next.js 13 (with Server-Side Rendering)
+- TypeScript
+- Tailwind
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Backend:
 
-## Stay in touch
+- NestJS
+- PostgreSQL (Dockerized)
+- JWT Authentication
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Deployment:
 
-## License
+- AWS EC2 (for hosting both frontend and backend)
+- AWS Load Balancer (for managing port number)
+- Docker (for containerization)
 
-Nest is [MIT licensed](LICENSE).
+## Usage
+
+1. Visit the homepage to browse music.
+2. Like your favorite tracks and view them on the Liked page.
+3. Use the search functionality to discover new music.
+4. Register or login using the provided modals to unlock additional features such as track upload.
