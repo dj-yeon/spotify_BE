@@ -13,6 +13,6 @@ export const lengthValidationMessage = (args: ValidationArguments) => {
   if (args.constraints.length === 2) {
     return `${args.property} should be between ${args.constraints[0]} and ${args.constraints[1]} characters.`;
   } else {
-    return `${args.property}는 최소  ${args.constraints[0]} .`;
+    return `${args.property} should be at least ${args.constraints[0]} characters.`;
   }
 };
