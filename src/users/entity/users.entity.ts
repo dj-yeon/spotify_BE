@@ -9,6 +9,7 @@ import { Exclude } from 'class-transformer';
 import { Subscription } from './subscription.entity';
 import { LikedSong } from 'src/posts/entity/likedSong.entity';
 import { SongPostModel } from 'src/posts/entity/songPost.entity';
+import { emailValidationMessage } from 'src/common/validation-message/email-validation.message';
 
 @Entity()
 export class UsersModel extends BaseModel {
@@ -24,7 +25,7 @@ export class UsersModel extends BaseModel {
     unique: true,
   })
   @IsString({ message: stringValidationMessage })
-  @IsEmail({}, { message: stringValidationMessage })
+  @IsEmail({}, { message: emailValidationMessage })
   email: string;
 
   @Column()
