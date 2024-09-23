@@ -24,7 +24,7 @@ export class UsersModel extends BaseModel {
   @Column({
     unique: true,
   })
-  @IsString({ message: stringValidationMessage })
+  // @IsString({ message: stringValidationMessage })
   @IsEmail({}, { message: emailValidationMessage })
   email: string;
 

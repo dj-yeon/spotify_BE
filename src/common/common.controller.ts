@@ -6,7 +6,6 @@ import {
   Post,
   Res,
   UploadedFile,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -14,7 +13,6 @@ import { Response } from 'express';
 import { join } from 'path';
 import { createReadStream } from 'fs';
 
-import { AccessTokenGuard } from 'src/auth/guard/bearer-token.guard';
 import { POST_IMAGE_PATH, POST_SONG_PATH } from './const/path.const';
 import { CommonService } from './common.service';
 import { SongPostModel } from 'src/posts/entity/songPost.entity';
